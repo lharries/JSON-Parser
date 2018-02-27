@@ -1,0 +1,9 @@
+[
+    {
+        "integer": 1234234,
+        "negative-number": -234,
+        "decimal-number": 234.234,
+        "exponential-number": -234.234e23,
+        "exponential-number-two": -234.234E-23
+    }
+]

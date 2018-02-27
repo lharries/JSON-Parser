@@ -1,0 +1,36 @@
+package Example;
+
+import java_cup.runtime.*;
+
+parser code {:
+	public static void main(String args[]) throws Exception {
+		SymbolFactory sf = new DefaultSymbolFactory();
+		if (args.length==0) new Parser(new Scanner(System.in,sf),sf).parse();
+		else new Parser(new Scanner(new java.io.FileInputStream(args[0]),sf),sf).parse();
+	}
+:}
+
+terminal COMMA, LSQBRACKET, RSQBRACKET, LCUBRACE, RCUBRACE, COLON, NUMBER, STRING, APOSTROPHE, TRUE, FALSE, NULL, BOOLEAN;
+non terminal json_blobs, blob, array, value_list, value, object, key_value_pair, key_value_pair_list;
+
+// Json blobs contain one or more blobs
+json_blobs ::= json_blobs blob | blob;
+
+// A blob is either an array or an object
+blob ::= array | object;
+
+// arrays are surrounded by rectangular brackets and either contain a list of values or nothing, implying they are empty
+array ::= LSQBRACKET value_list RSQBRACKET | LSQBRACKET RSQBRACKET;
+// a value list contains one or more comma separated values
+value_list ::= value_list COMMA value | value;
+
+// objects are surrounded by curly brackets and contain a list of key-value pairs
+object ::= LCUBRACE key_value_pair_list RCUBRACE | LCUBRACE RCUBRACE;
+
+// a list of key-value pairs contains one or more comma separated key-value pairs
+key_value_pair_list ::= key_value_pair_list COMMA key_value_pair | key_value_pair;
+// a key value pair is string and a value separated by a colon
+key_value_pair ::= STRING COLON value;
+
+// a value is either a number, a string, an array, an object, a boolean, or null
+value ::= NUMBER | STRING | array | object | BOOLEAN | NULL;
